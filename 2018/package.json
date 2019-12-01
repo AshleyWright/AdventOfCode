@@ -1,0 +1,23 @@
+{
+  "name": "2018",
+  "version": "1.0.0",
+  "description": "",
+  "main": "01_1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^12.7.12",
+    "@types/ramda": "^0.26.29",
+    "ramda": "^0.26.1",
+    "ts-node": "^8.4.1",
+    "ts-toolbelt": "^4.8.8",
+    "typescript": "^3.6.4"
+  },
+  "prettier": {
+    "printWidth": 100
+  }
+}
