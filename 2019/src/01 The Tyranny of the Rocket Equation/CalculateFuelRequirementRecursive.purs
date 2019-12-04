@@ -4,13 +4,11 @@ import Prelude
 
 import Data.Either (Either(..))
 import Data.Foldable (foldl)
+import Effect (Effect)
 import Effect.Console (log, logShow)
-import Math (floor)
 
 import Common
-
-getRequiredFuel ∷ Number → Number
-getRequiredFuel mass = floor (mass / 3.0) - 2.0
+import CalculateFuelRequirement (getRequiredFuel)
 
 getRequiredFuelRecursive ∷ Number → Number
 getRequiredFuelRecursive mass
@@ -19,8 +17,9 @@ getRequiredFuelRecursive mass
   where
     fuelMass = getRequiredFuel mass
 
+main ∷ Effect Unit
 main = do
-  json ∷ JSONResult (Array Number) <- loadJSON "./data/01.json"
+  json ∷ JSONResult (Array Number) ← loadJSON "./data/01.json"
   case json of
     Right input → do
       logShow $ foldl (+) 0.0 $ map getRequiredFuelRecursive input
