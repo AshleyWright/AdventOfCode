@@ -1,14 +1,12 @@
 module CalculateFuelRequirement where
 
 import Prelude
-
 import Data.Array
 import Data.Either (Either(..))
 import Data.Foldable (foldl)
 import Effect (Effect)
 import Effect.Console (log, logShow)
 import Math (floor)
-
 import Common
 
 getRequiredFuel ∷ Number → Number

@@ -1,0 +1,11 @@
+devDependencies:
+  purty: 4.5.2
+lockfileVersion: 5.1
+packages:
+  /purty/4.5.2:
+    dev: true
+    hasBin: true
+    resolution:
+      integrity: sha512-Ai0sONNVfGxsd+BfPZlp+uJvcdH/qbSytpBXDbMi6zryw/GXI1cSCI2AsTPsbiU9X+f2bilcL03D1uOg+EAFKw==
+specifiers:
+  purty: ^4.5.2
