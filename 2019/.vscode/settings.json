@@ -46,6 +46,8 @@
     "node_modules": true,
     "output": true,
     ".psc-ide-port": true,
-    ".purs-repl": true
+    ".purs-repl": true,
+    "package-lock.json": true,
+    "pnpm-lock.yaml": true
   }
 }
