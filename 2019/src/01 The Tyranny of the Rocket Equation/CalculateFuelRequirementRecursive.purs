@@ -1,11 +1,11 @@
 module CalculateFuelRequirementRecursive where
 
-import Prelude
+import Prelude (Unit, bind, map, otherwise, ($), (+), (<=))
 import Data.Either (Either(..))
 import Data.Foldable (foldl)
 import Effect (Effect)
-import Effect.Console (log, logShow)
-import Common
+import Effect.Console (logShow)
+import Common (JSONResult, loadJSON)
 import CalculateFuelRequirement (getRequiredFuel)
 
 getRequiredFuelRecursive ∷ Number → Number

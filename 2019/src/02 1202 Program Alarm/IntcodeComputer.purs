@@ -1,13 +1,12 @@
 module IntcodeComputer where
 
-import Prelude
+import Prelude (Unit, bind, otherwise, ($), (*), (+))
 import Data.Array (updateAt, (!!))
 import Data.Either (Either(..))
 import Data.Maybe (fromMaybe)
-import Debug.Trace (trace)
 import Effect (Effect)
-import Effect.Console (log, logShow)
-import Common
+import Effect.Console (logShow)
+import Common (JSONResult, loadJSON)
 
 type Program
   = Array Int
@@ -55,7 +54,7 @@ offset ∷ Int → Address → Address
 offset o (Address a) = Address (a + o)
 
 tick ∷ Computer → Computer
-tick computer@(Computer prog count _) = trace (show [ [ count ], prog ]) \_ -> decode opCode resultAddress op1 op2 computer
+tick computer@(Computer prog count _) = decode opCode resultAddress op1 op2 computer
   where
   opCode = OpCode $ fetch instructionAddress computer
 
@@ -69,7 +68,7 @@ tick computer@(Computer prog count _) = trace (show [ [ count ], prog ]) \_ -> d
 
 run ∷ Program → Program
 run prog = case (run' $ Computer prog 0 false) of
-  (Computer prog _ _) → prog
+  (Computer prog' _ _) → prog'
   where
   run' comp
     | hasHalted comp = comp

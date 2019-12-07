@@ -1,19 +1,20 @@
 module Common where
 
-import Prelude
+import Prelude (bind, pure, ($))
 import Data.Array (fromFoldable)
-import Data.Either (Either(..))
-import Data.Foldable
-import Data.Tuple
+import Data.Either (Either)
+import Data.Foldable (class Foldable)
+import Data.Tuple (Tuple(..))
 import Effect
 import Foreign (MultipleErrors)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
-import Simple.JSON (readJSON)
+import Simple.JSON (class ReadForeign, readJSON)
 
 type JSONResult a
   = Either MultipleErrors a
 
+loadJSON ∷ ∀ a. ReadForeign a ⇒ String → Effect (JSONResult a)
 loadJSON path = do
   rawJSON <- readTextFile UTF8 path
   pure $ readJSON rawJSON

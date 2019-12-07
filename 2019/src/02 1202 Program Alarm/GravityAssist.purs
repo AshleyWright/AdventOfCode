@@ -1,15 +1,15 @@
 module GravityAssist where
 
-import Prelude
-import Data.Array (filter, head, length, range, tail, updateAt, (!!))
+import Prelude (Unit, bind, otherwise, ($), (==))
+import Data.Array (head, length, range, tail, updateAt, (!!))
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..), fromJust, fromMaybe)
-import Data.Tuple
+import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (logShow)
 import Partial.Unsafe (unsafePartial)
-import Common
-import IntcodeComputer
+import Common (JSONResult, cartesianProduct2, loadJSON)
+import IntcodeComputer (Program, run)
 
 init ∷ Int → Int → Program → Program
 init noun verb prog = fromMaybe prog $ updateAt 2 verb (fromMaybe prog $ updateAt 1 noun prog)

@@ -1,13 +1,12 @@
 module CalculateFuelRequirement where
 
-import Prelude
-import Data.Array
+import Prelude (Unit, bind, map, ($), (+), (-), (/))
 import Data.Either (Either(..))
 import Data.Foldable (foldl)
 import Effect (Effect)
-import Effect.Console (log, logShow)
+import Effect.Console (logShow)
 import Math (floor)
-import Common
+import Common (JSONResult, loadJSON)
 
 getRequiredFuel ∷ Number → Number
 getRequiredFuel mass = floor (mass / 3.0) - 2.0
