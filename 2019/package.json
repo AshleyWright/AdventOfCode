@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "run-for-every-file --src ./src --file \"**/**/*.purs\" --run \"purty --write \\\"{{src-file}}\\\"\"",
+    "test": "pulp test",
+    "format": "run-for-every-file --src \"./\" --file \"src/**/*.purs\" --file \"test/**/*.purs\" --run \"purty --write \\\"{{src-file}}\\\"\"",
     "repl": "pulp repl"
   },
   "author": "Ashley Wright",
