@@ -15,7 +15,7 @@ init ∷ Int → Int → Program → Program
 init noun verb prog = updateAt 2 verb (updateAt 1 noun prog ∥ prog) ∥ prog
 
 getOutput ∷ Program → Int
-getOutput prog = prog ↸ 0 ∥ 0
+getOutput prog = head prog ∥ 0
 
 findInputs ∷ Program → Tuple Int Int → Tuple Int Int → Int → Maybe (Tuple Int Int)
 findInputs prog (Tuple nmin nmax) (Tuple vmin vmax) target = findInputs' $ cartesianProduct2 nouns verbs

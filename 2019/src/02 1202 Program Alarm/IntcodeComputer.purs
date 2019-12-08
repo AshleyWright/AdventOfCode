@@ -1,12 +1,12 @@
 module IntcodeComputer where
 
-import Prelude (class Show, Unit, bind, otherwise, show, ($), (*), (+))
+import Prelude (class Eq, class Show, Unit, bind, otherwise, show, ($), (+))
 import Data.Array (updateAt)
 import Data.Either (Either(..))
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Effect (Effect)
 import Effect.Console (logShow)
-import Common (JSONResult, id, loadJSON, (∘), (⫲), (∥), (↸))
+import Common (JSONResult, id, loadJSON, (∘), (⫲), (∥), (↸), (×))
 
 type Program
   = Array Int
@@ -16,15 +16,20 @@ newtype Address
 instance showAddress ∷ Show Address where
   show address = "(Address " ⫲ (show ∘ unwrap) address ⫲ ")"
 derive instance newtypeAddress ∷ Newtype Address _
+derive instance eqAddress ∷ Eq Address
 
 newtype OpCode
   = OpCode Int
 instance showOpCode ∷ Show OpCode where
   show opCode = "(OpCode " ⫲ (show ∘ unwrap) opCode ⫲ ")"
 derive instance newtypeOpCode ∷ Newtype OpCode _
+derive instance eqOpCode ∷ Eq OpCode
 
 data Computer
   = Computer Program Int Boolean
+instance showComputer ∷ Show Computer where
+  show (Computer prog count halt) = "(Computer " ⫲ (show prog) ⫲ " " ⫲ (show count) ⫲ " " ⫲ (show halt) ⫲ ")"
+derive instance eqComputer ∷ Eq Computer
 
 fetch ∷ Address → Computer → Int
 fetch (Address a) (Computer prog _ _) = prog ↸ a ∥ 0
@@ -35,7 +40,7 @@ indirect a comp = fetch (wrap $ fetch a comp) comp
 decode ∷ OpCode → Address → Int → Int → Computer → Computer
 decode (OpCode 1) = execute (+)
 
-decode (OpCode 2) = execute (*)
+decode (OpCode 2) = execute (×)
 
 decode (OpCode 99) = \_ _ _ (Computer p c _) → Computer p c true
 
