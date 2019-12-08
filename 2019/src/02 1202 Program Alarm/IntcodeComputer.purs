@@ -1,42 +1,48 @@
 module IntcodeComputer where
 
-import Prelude (Unit, bind, otherwise, ($), (*), (+))
-import Data.Array (updateAt, (!!))
+import Prelude (class Show, Unit, bind, otherwise, show, ($), (*), (+))
+import Data.Array (updateAt)
 import Data.Either (Either(..))
-import Data.Maybe (fromMaybe)
+import Data.Newtype (class Newtype, unwrap, wrap)
 import Effect (Effect)
 import Effect.Console (logShow)
-import Common (JSONResult, loadJSON)
+import Common (JSONResult, id, loadJSON, (∘), (⫲), (∥), (↸))
 
 type Program
   = Array Int
 
 newtype Address
   = Address Int
+instance showAddress ∷ Show Address where
+  show address = "(Address " ⫲ (show ∘ unwrap) address ⫲ ")"
+derive instance newtypeAddress ∷ Newtype Address _
 
 newtype OpCode
   = OpCode Int
+instance showOpCode ∷ Show OpCode where
+  show opCode = "(OpCode " ⫲ (show ∘ unwrap) opCode ⫲ ")"
+derive instance newtypeOpCode ∷ Newtype OpCode _
 
 data Computer
   = Computer Program Int Boolean
 
 fetch ∷ Address → Computer → Int
-fetch (Address a) (Computer prog _ _) = fromMaybe 0 $ prog !! a
+fetch (Address a) (Computer prog _ _) = prog ↸ a ∥ 0
 
 indirect ∷ Address → Computer → Int
-indirect a comp = fetch (Address $ fetch a comp) comp
+indirect a comp = fetch (wrap $ fetch a comp) comp
 
 decode ∷ OpCode → Address → Int → Int → Computer → Computer
 decode (OpCode 1) = execute (+)
 
 decode (OpCode 2) = execute (*)
 
-decode (OpCode 99) = (\_ _ _ (Computer p c _) → Computer p c true)
+decode (OpCode 99) = \_ _ _ (Computer p c _) → Computer p c true
 
-decode _ = (\_ _ _ comp → comp)
+decode _ = \_ _ _ → id
 
 write ∷ Int → Address → Computer → Computer
-write val (Address a) (Computer prog count halt) = Computer (fromMaybe prog $ updateAt a val prog) count halt
+write val (Address a) (Computer prog count halt) = Computer (updateAt a val prog ∥ prog) count halt
 
 execute ∷ (Int → Int → Int) → Address → Int → Int → Computer → Computer
 execute f res op1 op2 = write (f op1 op2) res
@@ -48,23 +54,28 @@ hasHalted ∷ Computer → Boolean
 hasHalted (Computer _ _ halt) = halt
 
 getCurrentInstructionAddress ∷ Computer → Address
-getCurrentInstructionAddress (Computer _ count _) = Address count
+getCurrentInstructionAddress (Computer _ count _) = wrap count
 
 offset ∷ Int → Address → Address
-offset o (Address a) = Address (a + o)
+offset o (Address a) = wrap (a + o)
 
 tick ∷ Computer → Computer
 tick computer@(Computer prog count _) = decode opCode resultAddress op1 op2 computer
   where
-  opCode = OpCode $ fetch instructionAddress computer
+  opCode ∷ OpCode
+  opCode = wrap $ fetch instructionAddress computer
 
+  instructionAddress ∷ Address
   instructionAddress = getCurrentInstructionAddress computer
 
+  op1 ∷ Int
   op1 = indirect (offset 1 instructionAddress) computer
 
+  op2 ∷ Int
   op2 = indirect (offset 2 instructionAddress) computer
 
-  resultAddress = Address $ fetch (offset 3 instructionAddress) computer
+  resultAddress ∷ Address
+  resultAddress = wrap $ fetch (offset 3 instructionAddress) computer
 
 run ∷ Program → Program
 run prog = case (run' $ Computer prog 0 false) of
@@ -72,13 +83,13 @@ run prog = case (run' $ Computer prog 0 false) of
   where
   run' comp
     | hasHalted comp = comp
-    | otherwise = run' $ step (tick comp)
+    | otherwise      = (run' ∘ step ∘ tick) comp
 
 main ∷ Effect Unit
 main = do
-  json ∷ JSONResult (Array Int) ← loadJSON "./data/02.json"
+  json ∷ JSONResult Program ← loadJSON "./data/02.json"
   case json of
     Right input → do
-      logShow $ run (fromMaybe input $ updateAt 2 2 (fromMaybe input $ updateAt 1 12 input))
+      logShow ∘ run $ (updateAt 2 2 $ updateAt 1 12 input ∥ input) ∥ input
     Left e → do
       logShow e

@@ -1,15 +1,32 @@
 module Common where
 
-import Prelude (bind, pure, ($))
-import Data.Array (fromFoldable)
+import Prelude (append, bind, compose, conj, disj, div, flip, mul, notEq, pure, ($))
+import Data.Array (fromFoldable, index)
 import Data.Either (Either)
 import Data.Foldable (class Foldable)
+import Data.Maybe (Maybe, fromMaybe)
+import Data.Ord (greaterThanOrEq, lessThanOrEq)
 import Data.Tuple (Tuple(..))
 import Effect
 import Foreign (MultipleErrors)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 import Simple.JSON (class ReadForeign, readJSON)
+
+infixr 9 compose as ∘
+infixr 5 append as ⫲
+infixl 7 mul as ×
+infixl 7 div as ÷
+infixl 4 lessThanOrEq as ≤
+infixl 4 greaterThanOrEq as ≥
+infix 4 notEq as ≠
+infixr 2 disj as ∨
+infixr 3 conj as ∧
+infixl 4 nothingCoalesce as ∥
+infixl 8 index as ↸
+
+nothingCoalesce ∷ ∀ a. Maybe a → a → a
+nothingCoalesce = flip fromMaybe
 
 type JSONResult a
   = Either MultipleErrors a
@@ -24,3 +41,6 @@ cartesianProduct2 as bs = do
   a ← fromFoldable as
   b ← fromFoldable bs
   pure $ Tuple a b
+
+id ∷ ∀ a. a → a
+id a = a
