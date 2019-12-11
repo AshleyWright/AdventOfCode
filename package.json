@@ -1,0 +1,30 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pre-commit": "cd 2019 && npm run pre-commit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshleyWright/AdventOfCode.git"
+  },
+  "author": "Ashley Wright",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AshleyWright/AdventOfCode/issues"
+  },
+  "homepage": "https://github.com/AshleyWright/AdventOfCode#readme",
+  "private": true,
+  "devDependencies": {
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre-commit"
+    }
+  }
+}

@@ -9,12 +9,16 @@
   "scripts": {
     "test": "pulp test",
     "format": "run-for-every-file --src \"./\" --file \"src/**/*.purs\" --file \"test/**/*.purs\" --run \"purty --write \\\"{{src-file}}\\\"\"",
-    "repl": "pulp repl"
+    "repl": "pulp repl",
+    "pre-commit": "npm test && lint-staged"
   },
   "author": "Ashley Wright",
   "license": "MIT",
   "devDependencies": {
+    "lint-staged": "^9.5.0",
+    "purescript": "^0.13.5",
     "purty": "^4.5.2",
     "run-for-every-file": "^1.1.0"
-  }
+  },
+  "private": true
 }
