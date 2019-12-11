@@ -8,7 +8,7 @@ import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (logShow)
 import Partial.Unsafe (unsafePartial)
-import Common (JSONResult, cartesianProduct2, loadJSON, (∥), (↸), (∘))
+import Common (JSONResult, cartesianProduct2, loadJSON, (∥), (∘))
 import IntcodeComputer (Program, run)
 
 init ∷ Int → Int → Program → Program
