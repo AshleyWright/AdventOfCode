@@ -11,7 +11,7 @@ import CalculateFuelRequirement (getRequiredFuel)
 getRequiredFuelRecursive ∷ Number → Number
 getRequiredFuelRecursive mass
   | getRequiredFuel mass ≤ 0.0 = 0.0
-  | otherwise                  = fuelMass + getRequiredFuelRecursive fuelMass
+  | otherwise = fuelMass + getRequiredFuelRecursive fuelMass
     where
     fuelMass = getRequiredFuel mass
 

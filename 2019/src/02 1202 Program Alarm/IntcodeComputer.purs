@@ -13,22 +13,30 @@ type Program
 
 newtype Address
   = Address Int
+
 instance showAddress ∷ Show Address where
   show address = "(Address " ⫲ (show ∘ unwrap) address ⫲ ")"
+
 derive instance newtypeAddress ∷ Newtype Address _
+
 derive instance eqAddress ∷ Eq Address
 
 newtype OpCode
   = OpCode Int
+
 instance showOpCode ∷ Show OpCode where
   show opCode = "(OpCode " ⫲ (show ∘ unwrap) opCode ⫲ ")"
+
 derive instance newtypeOpCode ∷ Newtype OpCode _
+
 derive instance eqOpCode ∷ Eq OpCode
 
 data Computer
   = Computer Program Int Boolean
+
 instance showComputer ∷ Show Computer where
   show (Computer prog count halt) = "(Computer " ⫲ (show prog) ⫲ " " ⫲ (show count) ⫲ " " ⫲ (show halt) ⫲ ")"
+
 derive instance eqComputer ∷ Eq Computer
 
 fetch ∷ Address → Computer → Int
@@ -88,7 +96,7 @@ run prog = case (run' $ Computer prog 0 false) of
   where
   run' comp
     | hasHalted comp = comp
-    | otherwise      = (run' ∘ step ∘ tick) comp
+    | otherwise = (run' ∘ step ∘ tick) comp
 
 main ∷ Effect Unit
 main = do

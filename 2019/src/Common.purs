@@ -14,15 +14,25 @@ import Node.FS.Sync (readTextFile)
 import Simple.JSON (class ReadForeign, readJSON)
 
 infixr 9 compose as ∘
+
 infixr 5 append as ⫲
+
 infixl 7 mul as ×
+
 infixl 7 div as ÷
+
 infixl 4 lessThanOrEq as ≤
+
 infixl 4 greaterThanOrEq as ≥
+
 infix 4 notEq as ≠
+
 infixr 2 disj as ∨
+
 infixr 3 conj as ∧
+
 infixl 4 nothingCoalesce as ∥
+
 infixl 8 index as ↸
 
 nothingCoalesce ∷ ∀ a. Maybe a → a → a

@@ -29,8 +29,8 @@ findInputs prog (Tuple nmin nmax) (Tuple vmin vmax) target = findInputs' $ carte
   findInputs' ∷ Array (Tuple Int Int) → Maybe (Tuple Int Int)
   findInputs' candidates
     | length candidates == 0 = Nothing
-    | testNext candidates    = head candidates
-    | otherwise              = findInputs' $ tail candidates ∥ []
+    | testNext candidates = head candidates
+    | otherwise = findInputs' $ tail candidates ∥ []
 
   testNext ∷ Array (Tuple Int Int) → Boolean
   testNext candidates = testInputs $ unsafePartial $ fromJust ∘ head $ candidates
