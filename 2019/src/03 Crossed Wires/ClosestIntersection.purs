@@ -1,6 +1,6 @@
 module ClosestIntersection where
 
-import Prelude (class Eq, class Ord, class Show, Unit, between, bind, map, otherwise, pure, ($), (+), (-), (<$>), (==))
+import Prelude (class Eq, class Ord, class Semiring, class Show, class Ring, Unit, between, bind, map, otherwise, pure, ($), (+), (-), (<$>), (==))
 import Data.Array (filter, fromFoldable, head, last, length, tail)
 import Data.Array.NonEmpty.Internal (NonEmptyArray)
 import Data.Either (Either(..), fromRight)
@@ -11,20 +11,20 @@ import Data.NonEmpty (NonEmpty(..), foldl1)
 import Data.Ord (abs)
 import Data.String.Regex (Regex, match, regex)
 import Data.String.Regex.Flags (noFlags)
-import Data.Tuple (Tuple(..), fst, snd)
+import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Console (logShow)
 import Partial.Unsafe (unsafePartial)
 import Common (JSONResult, loadJSON, (∘), (≠), (≤), (×), (÷), (∧), (∥), (⫲), (↸))
 
-type Coord
-  = Tuple Int Int
+type Coord a r
+  = { x ∷ a, y ∷ a | r }
 
 type Vector
   = Tuple String Int
 
-type Line
-  = Tuple Coord Coord
+type Line a r s
+  = { from ∷ Coord a r, to ∷ Coord a r | s }
 
 data Orientation
   = Horizontal
@@ -50,33 +50,34 @@ toVector = toVector' ∘ tail' ∘ match' (unsafePartial $ fromRight $ regex """
   toVector' ∷ Array String → Vector
   toVector' array = Tuple (unsafePartial $ fromJust $ head array) (unsafePartial $ fromJust $ (fromJust ∘ Int.fromString) <$> last array)
 
-makeLine ∷ Coord → Vector → Line
-makeLine from@(Tuple x y) vector = if from ≤ to then Tuple from to else Tuple to from
-  where
-  to ∷ Coord
-  to = case vector of
-    Tuple "U" δy → Tuple x (y + δy)
-    Tuple "R" δx → Tuple (x + δx) y
-    Tuple "D" δy → Tuple x (y - δy)
-    Tuple "L" δx → Tuple (x - δx) y
-    _ → Tuple 0 0
+makeLine ∷ Coord Int () → Vector → Line Int () ()
+makeLine cursor vector =
+  { from: cursor
+  , to:
+    case vector of
+      Tuple "U" δy → cursor { y = cursor.y + δy }
+      Tuple "R" δx → cursor { x = cursor.x + δx }
+      Tuple "D" δy → cursor { y = cursor.y - δy }
+      Tuple "L" δx → cursor { x = cursor.x - δx }
+      _ → cursor { x = 0, y = 0 }
+  }
 
-manhattenDistance ∷ Coord → Int
-manhattenDistance (Tuple x y) = abs x + abs y
+manhattenDistance ∷ ∀ a r. Semiring a ⇒ Ord a ⇒ Ring a ⇒ Coord a r → a
+manhattenDistance coord = abs coord.x + abs coord.y
 
-orientation ∷ Line → Orientation
-orientation l@(Tuple (Tuple x0 y0) (Tuple x1 y1))
-  | x1 - x0 == 0 = Vertical
-  | y1 - y0 == 0 = Horizontal
+orientation ∷ ∀ r s. Line Int r s → Orientation
+orientation { from: start, to: end }
+  | end.x - start.x == 0 = Vertical
+  | end.y - start.y == 0 = Horizontal
   | otherwise = Diagonal
 
-gradient ∷ Line → Number
-gradient (Tuple (Tuple x0 y0) (Tuple x1 y1)) = Int.toNumber (y1 - y0) ÷ Int.toNumber (x1 - x0)
+gradient ∷ ∀ r s. Line Int r s → Number
+gradient { from: start, to: end } = Int.toNumber (end.y - start.y) ÷ Int.toNumber (end.x - start.x)
 
-intersect ∷ Line → Number
-intersect l@(Tuple (Tuple x y) _) = Int.toNumber y - gradient l × Int.toNumber x
+intersect ∷ ∀ r s. Line Int r s → Number
+intersect l@{ from: { x: x, y: y } } = Int.toNumber y - gradient l × Int.toNumber x
 
-areParrallel ∷ Line → Line → Boolean
+areParrallel ∷ ∀ r s t u. Line Int r s → Line Int t u → Boolean
 areParrallel ℓ0 ℓ1
   | orientation ℓ0 == orientation ℓ1 ∧ orientation ℓ0 ≠ Diagonal = true
   | gradient ℓ0 == gradient ℓ1 = true
@@ -85,25 +86,25 @@ areParrallel ℓ0 ℓ1
 between' ∷ ∀ a. Ord a ⇒ a → a → a → Boolean
 between' min max = if min ≤ max then between min max else between max min
 
-intersection ∷ Line → Line → Maybe Coord
-intersection ℓ0@(Tuple (Tuple x00 y00) (Tuple x01 y01)) ℓ1@(Tuple (Tuple x10 y10) (Tuple x11 y11))
+intersection ∷ ∀ r s t u. Line Int r s → Line Int t u → Maybe (Coord Int ())
+intersection ℓ0 ℓ1
   | areParrallel ℓ0 ℓ1 = Nothing
   | orientation ℓ0 == Vertical =
     let
       y ∷ Int
-      y = Int.floor $ gradient ℓ1 × Int.toNumber x00 + intersect ℓ1
+      y = Int.floor $ gradient ℓ1 × Int.toNumber ℓ0.from.x + intersect ℓ1
     in
-      if between' x10 x11 x00 ∧ between' y00 y01 y ∧ between' y10 y11 y then
-        Just (Tuple x00 y)
+      if between' ℓ1.from.x ℓ1.to.x ℓ0.from.x ∧ between' ℓ0.from.y ℓ0.to.y y ∧ between' ℓ1.from.y ℓ1.to.y y then
+        Just { x: ℓ0.from.x, y: y }
       else
         Nothing
   | orientation ℓ1 == Vertical =
     let
       y ∷ Int
-      y = Int.floor $ gradient ℓ0 × Int.toNumber x10 + intersect ℓ0
+      y = Int.floor $ gradient ℓ0 × Int.toNumber ℓ1.from.x + intersect ℓ0
     in
-      if between' x00 x01 x10 ∧ between' y00 y01 y ∧ between' y10 y11 y then
-        Just (Tuple x10 y)
+      if between' ℓ0.from.x ℓ0.to.x ℓ1.from.x ∧ between' ℓ0.from.y ℓ0.to.y y ∧ between' ℓ1.from.y ℓ1.to.y y then
+        Just { x: ℓ1.from.x, y: y }
       else
         Nothing
   | otherwise =
@@ -114,8 +115,8 @@ intersection ℓ0@(Tuple (Tuple x00 y00) (Tuple x01 y01)) ℓ1@(Tuple (Tuple x10
       y ∷ Int
       y = Int.floor $ gradient ℓ0 × Int.toNumber x + intersect ℓ0
     in
-      if between' x00 x01 x ∧ between' x10 x11 x ∧ between' y00 y01 y ∧ between' y10 y11 y then
-        Just (Tuple x y)
+      if between' ℓ0.from.x ℓ0.to.x x ∧ between' ℓ1.from.x ℓ1.to.x x ∧ between' ℓ0.from.y ℓ0.to.y y ∧ between' ℓ1.from.y ℓ1.to.y y then
+        Just { x: x, y: y }
       else
         Nothing
 
@@ -126,25 +127,23 @@ minByMaybe f x y
   | f (unsafePartial $ fromJust x) ≤ f (unsafePartial $ fromJust y) = x
   | otherwise = y
 
-makeLines ∷ Array String → Array Line
-makeLines = makeLines' [] (Tuple 0 0)
+makeLines ∷ Array String → Array (Line Int () ())
+makeLines = makeLines' [] { x: 0, y: 0 }
   where
-  makeLines' ∷ Array Line → Coord → Array String → Array Line
   makeLines' acc cursor moves
     | length moves ≤ 0 = acc
     | otherwise =
       let
-        line ∷ Line
         line = makeLine cursor $ toVector $ unsafePartial $ fromJust $ head moves
       in
-        makeLines' (acc ⫲ [ line ]) (if fst line == cursor then snd line else fst line) (tail moves ∥ [])
+        makeLines' (acc ⫲ [ line ]) (if line.from == cursor then line.to else line.from) (tail moves ∥ [])
 
 main ∷ Effect Unit
 main = do
   json ∷ JSONResult (Array (Array String)) ← loadJSON "./data/03.json"
   case json of
     Right input →
-      logShow $ manhattenDistance $ fromMaybe (Tuple 0 0) $ foldl1 (minByMaybe manhattenDistance) $ NonEmpty Nothing
+      logShow $ manhattenDistance $ fromMaybe { x: 0, y: 0 } $ foldl1 (minByMaybe manhattenDistance) $ NonEmpty Nothing
         $ filter isJust do
             line1 ← makeLines (input ↸ 0 ∥ [])
             line2 ← makeLines (input ↸ 1 ∥ [])

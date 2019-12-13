@@ -28,9 +28,7 @@ Each challenge comes in two parts, the solutions of each earning a star, totalli
     <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
     <td rowspan=2><a href=https://github.com/AshleyWright/AdventOfCode/tree/master/2019>📁</a>
   <tr align=center>
-    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
-
-  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>  <tr align=center>
     <td rowspan=3> <a href=https://adventofcode.com/2018>2018</a>
     <td rowspan=3> <a href=https://www.typescriptlang.org>TypeScript</a>
     <td> ⁑ <td> ⁑ <td>   <td>   <td>   <td>   <td>   <td>   <td>
@@ -40,6 +38,35 @@ Each challenge comes in two parts, the solutions of each earning a star, totalli
   <tr align=center>
     <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
 
+  <tr align=center>
+    <td rowspan=3> <a href=https://adventofcode.com/2017>2017</a>
+    <td rowspan=3>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+    <td rowspan=2>
+  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+
+  <tr align=center>
+    <td rowspan=3> <a href=https://adventofcode.com/2016>2016</a>
+    <td rowspan=3>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+    <td rowspan=2>
+  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+
+  <tr align=center>
+    <td rowspan=3> <a href=https://adventofcode.com/2015>2015</a>
+    <td rowspan=3>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+    <td rowspan=2>
+  <tr align=center>
+    <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
 
 </table>
 
