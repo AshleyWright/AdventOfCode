@@ -17,10 +17,10 @@ test =
       Assert.equal (Tuple "L" 1) $ toVector "L1"
       Assert.equal (Tuple "DIAG" 1) $ toVector "DIAG1"
     UnitTest.test "makeLine" do
-      Assert.equal { from: { x: 1, y: 1 }, to: { x: 1, y: 3 } } $ makeLine { x: 1, y: 1 } (Tuple "U" 2)
-      Assert.equal { from: { x: 1, y: 1 }, to: { x: 3, y: 1 } } $ makeLine { x: 1, y: 1 } (Tuple "R" 2)
-      Assert.equal { from: { x: 1, y: 1 }, to: { x: 1, y: (-1) } } $ makeLine { x: 1, y: 1 } (Tuple "D" 2)
-      Assert.equal { from: { x: 1, y: 1 }, to: { x: (-1), y: 1 } } $ makeLine { x: 1, y: 1 } (Tuple "L" 2)
+      Assert.equal { from: { x: 1, y: 1, signalDelay: 0 }, to: { x: 1, y: 3, signalDelay: 2 } } $ makeLine { x: 1, y: 1, signalDelay: 0 } (Tuple "U" 2)
+      Assert.equal { from: { x: 1, y: 1, signalDelay: 0 }, to: { x: 3, y: 1, signalDelay: 2 } } $ makeLine { x: 1, y: 1, signalDelay: 0 } (Tuple "R" 2)
+      Assert.equal { from: { x: 1, y: 1, signalDelay: 0 }, to: { x: 1, y: (-1), signalDelay: 2 } } $ makeLine { x: 1, y: 1, signalDelay: 0 } (Tuple "D" 2)
+      Assert.equal { from: { x: 1, y: 1, signalDelay: 0 }, to: { x: (-1), y: 1, signalDelay: 2 } } $ makeLine { x: 1, y: 1, signalDelay: 0 } (Tuple "L" 2)
     UnitTest.test "manhattenDistance" do
       Assert.equal 2 $ manhattenDistance { x: 1, y: 1 }
       Assert.equal 2 $ manhattenDistance { x: (-1), y: 1 }

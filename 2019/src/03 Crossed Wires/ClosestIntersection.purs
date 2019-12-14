@@ -50,15 +50,15 @@ toVector = toVector' ∘ tail' ∘ match' (unsafePartial $ fromRight $ regex """
   toVector' ∷ Array String → Vector
   toVector' array = Tuple (unsafePartial $ fromJust $ head array) (unsafePartial $ fromJust $ (fromJust ∘ Int.fromString) <$> last array)
 
-makeLine ∷ Coord Int () → Vector → Line Int () ()
+makeLine ∷ Coord Int ( signalDelay ∷ Int ) → Vector → Line Int ( signalDelay ∷ Int ) ()
 makeLine cursor vector =
   { from: cursor
   , to:
     case vector of
-      Tuple "U" δy → cursor { y = cursor.y + δy }
-      Tuple "R" δx → cursor { x = cursor.x + δx }
-      Tuple "D" δy → cursor { y = cursor.y - δy }
-      Tuple "L" δx → cursor { x = cursor.x - δx }
+      Tuple "U" δy → cursor { y = cursor.y + δy, signalDelay = cursor.signalDelay + δy }
+      Tuple "R" δx → cursor { x = cursor.x + δx, signalDelay = cursor.signalDelay + δx }
+      Tuple "D" δy → cursor { y = cursor.y - δy, signalDelay = cursor.signalDelay + δy }
+      Tuple "L" δx → cursor { x = cursor.x - δx, signalDelay = cursor.signalDelay + δx }
       _ → cursor { x = 0, y = 0 }
   }
 
@@ -127,8 +127,8 @@ minByMaybe f x y
   | f (unsafePartial $ fromJust x) ≤ f (unsafePartial $ fromJust y) = x
   | otherwise = y
 
-makeLines ∷ Array String → Array (Line Int () ())
-makeLines = makeLines' [] { x: 0, y: 0 }
+makeLines ∷ Array String → Array (Line Int ( signalDelay ∷ Int ) ())
+makeLines = makeLines' [] { x: 0, y: 0, signalDelay: 0 }
   where
   makeLines' acc cursor moves
     | length moves ≤ 0 = acc
