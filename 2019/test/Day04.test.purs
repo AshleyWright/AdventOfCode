@@ -3,7 +3,8 @@ module Test.Day04 where
 import Prelude (discard, ($))
 import Test.Unit as UnitTest
 import Test.Unit.Assert as Assert
-import PasswordCount
+import PasswordCount (ascendingDigits, equalAdjacents)
+import PasswordCount2 (repetitionExactLength)
 
 test ∷ UnitTest.TestSuite
 test =
@@ -21,3 +22,7 @@ test =
       Assert.equal true $ equalAdjacents 2112
       Assert.equal false $ equalAdjacents 0
       Assert.equal false $ equalAdjacents 121
+    UnitTest.test "repetitionExactLength" do
+      Assert.equal true $ repetitionExactLength 2 122
+      Assert.equal true $ repetitionExactLength 2 11122
+      Assert.equal false $ repetitionExactLength 2 0
