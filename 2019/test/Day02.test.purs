@@ -5,7 +5,7 @@ import Data.Maybe (Maybe(Just))
 import Data.Tuple (Tuple(Tuple))
 import Test.Unit as UnitTest
 import Test.Unit.Assert as Assert
-import IntcodeComputer (Address(..), Computer(..), OpCode(..), decode, execute, fetch, getCurrentInstructionAddress, hasHalted, indirect, offset, run, step, tick, write)
+import IntcodeComputer (Address(..), OpCode(..), decode, execute, fetch, getCurrentInstructionAddress, indirect, offset, run, step, tick, write)
 import GravityAssist (findInputs, getOutput, init)
 import Common ((×))
 
@@ -13,56 +13,53 @@ test ∷ UnitTest.TestSuite
 test =
   UnitTest.suite "02 1202 Program Alarm" do
     UnitTest.test "fetch" do
-      Assert.equal 1 $ fetch (Address 0) (Computer [ 1 ] 0 false)
-      Assert.equal 1 $ fetch (Address 0) (Computer [ 1 ] 0 true)
-      Assert.equal 0 $ fetch (Address 0) (Computer [] 0 false)
-      Assert.equal 0 $ fetch (Address 0) (Computer [] 0 true)
+      Assert.equal 1 $ fetch (Address 0) { memory: [ 1 ], instructionPointer: 0, halted: false }
+      Assert.equal 1 $ fetch (Address 0) { memory: [ 1 ], instructionPointer: 0, halted: true }
+      Assert.equal 0 $ fetch (Address 0) { memory: [], instructionPointer: 0, halted: false }
+      Assert.equal 0 $ fetch (Address 0) { memory: [], instructionPointer: 0, halted: true }
     UnitTest.test "indirect" do
-      Assert.equal 2 $ indirect (Address 0) (Computer [ 1, 2 ] 0 false)
-      Assert.equal 2 $ indirect (Address 0) (Computer [ 1, 2 ] 0 true)
-      Assert.equal 1 $ indirect (Address 1) (Computer [ 0, 1 ] 0 false)
-      Assert.equal 1 $ indirect (Address 1) (Computer [ 0, 1 ] 0 true)
-      Assert.equal 0 $ indirect (Address 0) (Computer [ 2, 1 ] 0 false)
-      Assert.equal 0 $ indirect (Address 0) (Computer [ 2, 1 ] 0 true)
+      Assert.equal 2 $ indirect (Address 0) { memory: [ 1, 2 ], instructionPointer: 0, halted: false }
+      Assert.equal 2 $ indirect (Address 0) { memory: [ 1, 2 ], instructionPointer: 0, halted: true }
+      Assert.equal 1 $ indirect (Address 1) { memory: [ 0, 1 ], instructionPointer: 0, halted: false }
+      Assert.equal 1 $ indirect (Address 1) { memory: [ 0, 1 ], instructionPointer: 0, halted: true }
+      Assert.equal 0 $ indirect (Address 0) { memory: [ 2, 1 ], instructionPointer: 0, halted: false }
+      Assert.equal 0 $ indirect (Address 0) { memory: [ 2, 1 ], instructionPointer: 0, halted: true }
     UnitTest.test "decode" do
-      Assert.equal (Computer [ 2 ] 0 false) $ decode (OpCode 1) (Address 0) 1 1 (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 2 ] 0 true) $ decode (OpCode 1) (Address 0) 1 1 (Computer [ 0 ] 0 true)
-      Assert.equal (Computer [ 0, 2 ] 0 true) $ decode (OpCode 1) (Address 1) 1 1 (Computer [ 0, 1 ] 0 true)
-      Assert.equal (Computer [ 1 ] 0 false) $ decode (OpCode 2) (Address 0) 1 1 (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 0 ] 0 false) $ decode (OpCode (-1)) (Address 0) 1 1 (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 0 ] 0 true) $ decode (OpCode 99) (Address 0) 1 1 (Computer [ 0 ] 0 false)
+      Assert.equal { memory: [ 2 ], instructionPointer: 0, halted: false } $ decode (OpCode 1) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 2 ], instructionPointer: 0, halted: true } $ decode (OpCode 1) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: true }
+      Assert.equal { memory: [ 0, 2 ], instructionPointer: 0, halted: true } $ decode (OpCode 1) (Address 1) 1 1 { memory: [ 0, 1 ], instructionPointer: 0, halted: true }
+      Assert.equal { memory: [ 1 ], instructionPointer: 0, halted: false } $ decode (OpCode 2) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 0 ], instructionPointer: 0, halted: false } $ decode (OpCode (-1)) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 0 ], instructionPointer: 0, halted: true } $ decode (OpCode 99) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
     UnitTest.test "execute" do
-      Assert.equal (Computer [ 1 ] 0 false) $ execute (×) (Address 0) 1 1 (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 1 ] 0 true) $ execute (×) (Address 0) 1 1 (Computer [ 0 ] 0 true)
-      Assert.equal (Computer [ 2 ] 0 false) $ execute (+) (Address 0) 1 1 (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 99 ] 0 false) $ execute (\_ _ → 99) (Address 0) 1 1 (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 0, 1 ] 0 false) $ execute (×) (Address 1) 1 1 (Computer [ 0, 0 ] 0 false)
+      Assert.equal { memory: [ 1 ], instructionPointer: 0, halted: false } $ execute (×) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 1 ], instructionPointer: 0, halted: true } $ execute (×) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: true }
+      Assert.equal { memory: [ 2 ], instructionPointer: 0, halted: false } $ execute (+) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 99 ], instructionPointer: 0, halted: false } $ execute (\_ _ → 99) (Address 0) 1 1 { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 0, 1 ], instructionPointer: 0, halted: false } $ execute (×) (Address 1) 1 1 { memory: [ 0, 0 ], instructionPointer: 0, halted: false }
     UnitTest.test "write" do
-      Assert.equal (Computer [ 1 ] 0 false) $ write 1 (Address 0) (Computer [ 0 ] 0 false)
-      Assert.equal (Computer [ 1 ] 0 true) $ write 1 (Address 0) (Computer [ 0 ] 0 true)
-      Assert.equal (Computer [ 0, 2 ] 0 false) $ write 2 (Address 1) (Computer [ 0, 1 ] 0 false)
-      Assert.equal (Computer [ 0, 2 ] 0 true) $ write 2 (Address 1) (Computer [ 0, 1 ] 0 true)
+      Assert.equal { memory: [ 1 ], instructionPointer: 0, halted: false } $ write 1 (Address 0) { memory: [ 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 1 ], instructionPointer: 0, halted: true } $ write 1 (Address 0) { memory: [ 0 ], instructionPointer: 0, halted: true }
+      Assert.equal { memory: [ 0, 2 ], instructionPointer: 0, halted: false } $ write 2 (Address 1) { memory: [ 0, 1 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 0, 2 ], instructionPointer: 0, halted: true } $ write 2 (Address 1) { memory: [ 0, 1 ], instructionPointer: 0, halted: true }
     UnitTest.test "step" do
-      Assert.equal (Computer [] 4 false) $ step (Computer [] 0 false)
-      Assert.equal (Computer [] 4 true) $ step (Computer [] 0 true)
-    UnitTest.test "hasHalted" do
-      Assert.equal true $ hasHalted (Computer [] 0 true)
-      Assert.equal false $ hasHalted (Computer [] 0 false)
+      Assert.equal { memory: [], instructionPointer: 4, halted: false } $ step { memory: [], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [], instructionPointer: 4, halted: true } $ step { memory: [], instructionPointer: 0, halted: true }
     UnitTest.test "getCurrentInstructionAddress" do
-      Assert.equal (Address 0) $ getCurrentInstructionAddress (Computer [] 0 false)
-      Assert.equal (Address 0) $ getCurrentInstructionAddress (Computer [] 0 true)
-      Assert.equal (Address 1) $ getCurrentInstructionAddress (Computer [] 1 false)
-      Assert.equal (Address 1) $ getCurrentInstructionAddress (Computer [] 1 true)
+      Assert.equal (Address 0) $ getCurrentInstructionAddress { memory: [], instructionPointer: 0, halted: false }
+      Assert.equal (Address 0) $ getCurrentInstructionAddress { memory: [], instructionPointer: 0, halted: true }
+      Assert.equal (Address 1) $ getCurrentInstructionAddress { memory: [], instructionPointer: 1, halted: false }
+      Assert.equal (Address 1) $ getCurrentInstructionAddress { memory: [], instructionPointer: 1, halted: true }
     UnitTest.test "offset" do
       Assert.equal (Address 0) $ offset 0 (Address 0)
       Assert.equal (Address 1) $ offset 1 (Address 0)
       Assert.equal (Address 0) $ offset (-1) (Address 1)
     UnitTest.test "tick" do
-      Assert.equal (Computer [ 2, 0, 0, 0 ] 0 false) $ tick (Computer [ 1, 0, 0, 0 ] 0 false)
-      Assert.equal (Computer [ 2, 0, 0, 0 ] 0 true) $ tick (Computer [ 1, 0, 0, 0 ] 0 true)
-      Assert.equal (Computer [ 4, 0, 0, 0 ] 0 false) $ tick (Computer [ 2, 0, 0, 0 ] 0 false)
-      Assert.equal (Computer [ 99 ] 0 true) $ tick (Computer [ 99 ] 0 false)
-      Assert.equal (Computer [ 2, 1, 0, 0, 0 ] 1 false) $ tick (Computer [ 1, 1, 0, 0, 0 ] 1 false)
+      Assert.equal { memory: [ 2, 0, 0, 0 ], instructionPointer: 0, halted: false } $ tick { memory: [ 1, 0, 0, 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 2, 0, 0, 0 ], instructionPointer: 0, halted: true } $ tick { memory: [ 1, 0, 0, 0 ], instructionPointer: 0, halted: true }
+      Assert.equal { memory: [ 4, 0, 0, 0 ], instructionPointer: 0, halted: false } $ tick { memory: [ 2, 0, 0, 0 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 99 ], instructionPointer: 0, halted: true } $ tick { memory: [ 99 ], instructionPointer: 0, halted: false }
+      Assert.equal { memory: [ 2, 1, 0, 0, 0 ], instructionPointer: 1, halted: false } $ tick { memory: [ 1, 1, 0, 0, 0 ], instructionPointer: 1, halted: false }
     UnitTest.test "run" do
       Assert.equal [ 3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50 ] $ run [ 1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50 ]
       Assert.equal [ 2, 0, 0, 0, 99 ] $ run [ 1, 0, 0, 0, 99 ]
