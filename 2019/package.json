@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "pulp test",
+    "test": "spago test",
     "format": "run-for-every-file --src \"./\" --file \"src/**/*.purs\" --file \"test/**/*.purs\" --run \"purty --write \\\"{{src-file}}\\\"\"",
-    "repl": "pulp repl",
+    "repl": "spago repl",
     "pre-commit": "npm test && lint-staged"
   },
   "author": "Ashley Wright",
