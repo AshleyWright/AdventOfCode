@@ -23,7 +23,7 @@ Each challenge comes in two parts, the solutions of each earning a star, totalli
   <tr align=center>
     <td rowspan=3> <a href=https://adventofcode.com/2019>2019</a>
     <td rowspan=3> <a href=http://www.purescript.org>PureScript</a>
-    <td> ⁑ <td> ⁑ <td> ⁑ <td> ⁑ <td>   <td>   <td>   <td>   <td>
+    <td> ✻✻ <td> ✻✻ <td> ✻✻ <td> ✻✻ <td> ✻ <td>   <td>   <td>   <td>
   <tr align=center>
     <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
     <td rowspan=2><a href=https://github.com/AshleyWright/AdventOfCode/tree/master/2019>📁</a>
@@ -31,7 +31,7 @@ Each challenge comes in two parts, the solutions of each earning a star, totalli
     <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>  <tr align=center>
     <td rowspan=3> <a href=https://adventofcode.com/2018>2018</a>
     <td rowspan=3> <a href=https://www.typescriptlang.org>TypeScript</a>
-    <td> ⁑ <td> ⁑ <td>   <td>   <td>   <td>   <td>   <td>   <td>
+    <td> ✻✻ <td> ✻✻ <td>   <td>   <td>   <td>   <td>   <td>   <td>
   <tr align=center>
     <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
     <td rowspan=2><a href=https://github.com/AshleyWright/AdventOfCode/tree/master/2019>📁</a>

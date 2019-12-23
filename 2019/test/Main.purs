@@ -7,6 +7,7 @@ import Test.Day01 as Day01
 import Test.Day02 as Day02
 import Test.Day03 as Day03
 import Test.Day04 as Day04
+import Test.Day05 as Day05
 
 main ∷ Effect Unit
 main =
@@ -15,3 +16,4 @@ main =
     Day02.test
     Day03.test
     Day04.test
+    Day05.test

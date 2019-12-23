@@ -10,7 +10,8 @@
     "test": "spago test",
     "format": "run-for-every-file --src \"./\" --file \"src/**/*.purs\" --file \"test/**/*.purs\" --run \"purty --write \\\"{{src-file}}\\\"\"",
     "repl": "spago repl",
-    "pre-commit": "npm test && lint-staged"
+    "pre-commit": "npm test && lint-staged",
+    "build": "spago build --purs-args \"-g js,sourcemaps\""
   },
   "author": "Ashley Wright",
   "license": "MIT",
