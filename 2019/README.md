@@ -8,3 +8,4 @@ Advent of Code ✻ 2019 ✻ PureScript
 | 3<sup>rd</sup> | Crossed Wires                                 | ✻ | ✻ | ✓ |
 | 4<sup>th</sup> | Secure Container                               | ✻ | ✻ | ✓ |
 | 5<sup>th</sup> | Sunny with a Chance of Asteroids              | ✻ | ✻ | ½ |
+| 6<sup>th</sup> | Universal Orbit Map                            | ✻ |   |   |
