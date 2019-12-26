@@ -1,7 +1,7 @@
 module Common where
 
 import Prelude (append, bind, compose, conj, disj, div, flip, mod, mul, notEq, pure, ($))
-import Data.Array (fromFoldable, index)
+import Data.Array (fromFoldable, index, difference)
 import Data.Either (Either)
 import Data.Foldable (class Foldable)
 import Data.Maybe (Maybe, fromMaybe)
@@ -39,6 +39,8 @@ infixl 8 index as ↸
 infixr 5 cons as ▶
 
 infixl 7 mod as %
+
+infix 5 difference as ∖
 
 nothingCoalesce ∷ ∀ a. Maybe a → a → a
 nothingCoalesce = flip fromMaybe
