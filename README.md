@@ -1,6 +1,4 @@
-Advent of Code
-==============
-> Solutions by Ashley Wright
+![Advent of Code, solutions by Ashley Wright](/.github/banner.svg)
 
 This repository collates my solutions to the annual [Advent of Code](https://adventofcode.com) coding challenges. Advent of code is a set of 25 language-agnostic coding challenges released every December (1<sup>st</sup> – 25<sup>th</sup>) daily since 2015. As an further challenge, some participants take the opportunity to use these challenges as exercises for learning a new programming language or to strengthen their knowledge in a language they don't often have the opportunity to use.
 
